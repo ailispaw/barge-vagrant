@@ -10,8 +10,10 @@ Vagrant.configure("2") do |config|
   SHELL
 
   # nginxのコンテナを作成・起動する。
-  config.vm.provision :shell, privileged: false, inline: <<-SHELL
-    docker build -t nginx1 /home/bargee/vm/nginx
-    docker run -d -p 80:80 --name c_nginx1_1 nginx1
-  SHELL
+  config.vm.provision :docker do |docker|
+    docker.build_image "/home/bargee/vm/nginx", args: "-t nginx1"
+    docker.run "c_nginx1_1",
+      image: "nginx1",
+      args: "-p 80:80"
+  end
 end
